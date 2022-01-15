@@ -1,10 +1,12 @@
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from . import models
 from .database import engine
-from .routers import posts,users,auth,votes
-from .config import setting
-from fastapi.middleware.cors import CORSMiddleware
-from app import database
+from .routers import post, user, auth, vote
+from .config import settings
+
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -20,11 +22,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(post.router)
+app.include_router(user.router)
+app.include_router(auth.router)
+app.include_router(vote.router)
+
+
 @app.get("/")
 def root():
-    return "message : {hello world}"
-
-app.include_router(posts.router)
-app.include_router(users.router)
-app.include_router(auth.router)
-app.include_router(votes.router)
+    return {"message": "Hello World pushing out to ubuntu"}
